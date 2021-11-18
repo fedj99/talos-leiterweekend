@@ -1,6 +1,7 @@
 {
-	"editor.useTabStops": false,
 	"editor.tabSize": 4,
+	"editor.useTabStops": false,
+	"editor.insertSpaces": true,
 	"editor.detectIndentation": false,
 	"editor.formatOnSave": true,
 	"editor.codeActionsOnSave": {
@@ -8,6 +9,5 @@
 	},
 	"python.pythonPath": "python3",
 	"python.defaultInterpreterPath": "python3",
-	"autoDocstring.docstringFormat": "docblockr",
 	"cmake.configureOnOpen": false
 }
