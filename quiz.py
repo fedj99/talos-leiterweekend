@@ -11,6 +11,7 @@ from PIL import Image
 # Auxiliary methods
 
 base_path = '.'
+disable_animations = True
 
 
 def path(relative_path):
@@ -25,19 +26,22 @@ def concat_map(func, list):
     return concat(map(func, list))
 
 
-def typewrite(*values: object, speed=60, unit='char', newline=True):
-    def write(str):
-        sleep(1 / speed + (random() - 0.5) * 2 / speed)
-        sys.stdout.write(str)
-        sys.stdout.flush()
-    mappers = {
-        'char': lambda values: '\n'.join(map(str, values)),
-        'line': lambda values: concat_map(lambda val: str(val).splitlines(True), values)
-    }
-    for item in mappers[unit](values):
-        write(item)
-    if newline:
-        write('\n')
+def typewrite(*values: object, speed=300, unit='char', newline=True):
+    if (disable_animations):
+        print(*values)
+    else:
+        def write(str):
+            sleep(1 / speed)
+            sys.stdout.write(str)
+            sys.stdout.flush()
+        mappers = {
+            'char': lambda values: '\n'.join(map(str, values)),
+            'line': lambda values: concat_map(lambda val: str(val).splitlines(True), values)
+        }
+        for item in mappers[unit](values):
+            write(item)
+        if newline:
+            write('\n')
 
 
 def tw_input(prompt):
@@ -55,7 +59,7 @@ def show_image_timed(path, timeout=5):
     img.show()
     sleep(timeout)
     for proc in psutil.process_iter():
-        if proc.name() in ['display', 'Preview', 'dllhost.exe']:
+        if proc.name() in ['display', 'Preview', 'Microsoft.Photos.exe', 'Photos']:
             proc.kill()
     img.close()
 
@@ -77,34 +81,38 @@ def confirm(prompt):
     def fn():
         typewrite(prompt)
         tw_input('Drücke <ENTER> um fortzufahren...')
-        input()
     return fn
 
 
 def mc_question(question, options, answer):
     def fn():
-        typewrite(question)
+        typewrite(question + '\n')
         op_no = 1
         for option in options:
             typewrite(str(op_no) + ': ' + option)
             op_no += 1
-        trial_int = 0
+        typewrite()
+        guess = 0
         while True:
-            trial = tw_input(
+            guess_string = tw_input(
                 'Gib die Zahl deiner Antwort ein und drücke <ENTER>:')
             try:
-                trial_int = int(trial)
-                break
+                guess = int(guess_string)
+                if (guess > 0 and guess <= len(options)):
+                    break
             except:
                 typewrite('Keine gültige eingabe.')
-        typewrite('Deine Eingabe: ' + str(trial_int))
+        correct = options[guess - 1] == answer
+        typewrite('Deine Antwort ist ' +
+                  ('KORREKT!' if correct else ' FALSCH...'))
+        typewrite()
     return fn
 
 
 def image_question(image, question, options, answer):
     def fn():
-        show_image_timed(image, timeout=3)
-        mc_question(question, options, answer)
+        show_image_timed(path(image), timeout=2.3)
+        mc_question(question, options, answer)()
     return fn
 
 
@@ -138,13 +146,80 @@ main_quiz = {
         {
             'title': 'Knoten',
             'script': [
-                ('text', info(
-                    'Im folgenden wird dir je ein Bild für 2 Sekunden angezeigt. Du musst dann die Fragen beantworten.')),
-                ('text', confirm('Bereit?')),
-                ('question', image_question(path('images/knoten_1.png'),
-                                            'Welcher Knoten ist das?', knots, 'Samariter')),
-                ('question', image_question(path('images/knoten_2.jpg'),
-                                            'Welcher Knoten ist das?', knots, 'Achter (doppelt)'))
+                (
+                    'text',
+                    info(
+                        'Im folgenden wird dir je ein Bild für 2 Sekunden angezeigt. Du musst dann die Fragen beantworten.')
+                ),
+                (
+                    'text',
+                    confirm('Bereit?')
+                ),
+                (
+                    'question',
+                    image_question('images/knoten_1.png',
+                                   'Welcher Knoten ist das?', knots, 'Samariter')
+                ),
+                (
+                    'question',
+                    image_question('images/knoten_2.jpg',
+                                   'Welcher Knoten ist das?', knots, 'Achter (doppelt)')
+                )
+                (
+                    'question',
+                    image_question('images/knoten_5.JPG',
+                                   'Welcher Knoten ist das?', knots, 'Mastwurf')
+                ),
+                (
+                    'question',
+                    image_question('images/knoten_6.png',
+                                   'Welcher Knoten ist das?', knots, 'Spanner')
+                )
+            ]
+        },
+        {
+            'title': '1. Hilfe',
+            'script': [
+                (
+                    'question',
+                    mc_question(
+                        'Was ist das erste, was du bei einem Unfall tust?',
+                        [
+                            'Alarmieren',
+                            'Weglaufen',
+                            'Person(en) ansprechen',
+                            'Unfallort sichern',
+                            'Ein Foto machen'
+                        ],
+                        'Unfallort sichern'
+                    )
+                ),
+                (
+                    'question',
+                    mc_question(
+                        'Wofür steht "BLS-AED"?',
+                        [
+                            'Beatmen, Lagern, Sichern - Automatische elektrische Defibrillation',
+                            'Basic Life Support - Automatic Electric Defibrillation',
+                            'Be Like Sherlock - Analyze Every Detail',
+                            'Begin Life Saving - Alert Every Domain'
+                        ],
+                        'Basic Life Support - Automatic Electric Defibrillation'
+                    )
+                ),
+                (
+                    'question',
+                    mc_question(
+                        'Bei einem Sonnenstich, wie soll die Person gelagert werden?',
+                        [
+                            'Füsse erhöht',
+                            'Oberkörper erhöht',
+                            'Aufrecht',
+                            'Flach auf Boden'
+                        ],
+                        'Oberkörper erhöht'
+                    )
+                )
             ]
         }
     ]

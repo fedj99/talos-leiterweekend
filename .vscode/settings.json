@@ -8,5 +8,6 @@
 	},
 	"python.pythonPath": "python3",
 	"python.defaultInterpreterPath": "python3",
-	"autoDocstring.docstringFormat": "docblockr"
+	"autoDocstring.docstringFormat": "docblockr",
+	"cmake.configureOnOpen": false
 }
