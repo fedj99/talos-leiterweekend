@@ -2,5 +2,11 @@
 	"editor.useTabStops": false,
 	"editor.tabSize": 4,
 	"editor.detectIndentation": false,
-	"editor.formatOnSave": false
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll": true
+	},
+	"python.pythonPath": "python3",
+	"python.defaultInterpreterPath": "python3",
+	"autoDocstring.docstringFormat": "docblockr"
 }
