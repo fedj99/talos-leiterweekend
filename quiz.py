@@ -10,6 +10,12 @@ from PIL import Image
 
 # Auxiliary methods
 
+base_path = '.'
+
+
+def path(relative_path):
+    return base_path + '/' + relative_path
+
 
 def concat(lists):
     return reduce(lambda acc, x: acc + x, lists, [])
@@ -19,7 +25,7 @@ def concat_map(func, list):
     return concat(map(func, list))
 
 
-def typewrite(*values: object, speed=60, unit='char'):
+def typewrite(*values: object, speed=60, unit='char', newline=True):
     def write(str):
         sleep(1 / speed + (random() - 0.5) * 2 / speed)
         sys.stdout.write(str)
@@ -30,7 +36,13 @@ def typewrite(*values: object, speed=60, unit='char'):
     }
     for item in mappers[unit](values):
         write(item)
-    write('\n')
+    if newline:
+        write('\n')
+
+
+def tw_input(prompt):
+    typewrite(prompt + ' ', newline=False)
+    return input()
 
 
 def print_figlet(text, font='standard', alignment='left'):
@@ -64,14 +76,28 @@ def info(info):
 def confirm(prompt):
     def fn():
         typewrite(prompt)
-        typewrite('Drücke <ENTER> um fortzufahren...')
+        tw_input('Drücke <ENTER> um fortzufahren...')
         input()
     return fn
 
 
 def mc_question(question, options, answer):
     def fn():
-        pass
+        typewrite(question)
+        op_no = 1
+        for option in options:
+            typewrite(str(op_no) + ': ' + option)
+            op_no += 1
+        trial_int = 0
+        while True:
+            trial = tw_input(
+                'Gib die Zahl deiner Antwort ein und drücke <ENTER>:')
+            try:
+                trial_int = int(trial)
+                break
+            except:
+                typewrite('Keine gültige eingabe.')
+        typewrite('Deine Eingabe: ' + str(trial_int))
     return fn
 
 
@@ -115,9 +141,9 @@ main_quiz = {
                 ('text', info(
                     'Im folgenden wird dir je ein Bild für 2 Sekunden angezeigt. Du musst dann die Fragen beantworten.')),
                 ('text', confirm('Bereit?')),
-                ('question', image_question('images/knoten_1.png',
+                ('question', image_question(path('images/knoten_1.png'),
                                             'Welcher Knoten ist das?', knots, 'Samariter')),
-                ('question', image_question('images/knoten_2.jpg',
+                ('question', image_question(path('images/knoten_2.jpg'),
                                             'Welcher Knoten ist das?', knots, 'Achter (doppelt)'))
             ]
         }
