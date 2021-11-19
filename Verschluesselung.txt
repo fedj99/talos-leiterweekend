@@ -1,0 +1,30 @@
+| Buchstabe | Verschlüsselung |
+| ----------| ----------------|
+| A         | 86              |
+| B         | 12              |
+| C         | 37              |
+| D         |  7              |
+| E         |  1              |
+| F         | 49              |
+| G         | 77              |
+| H         | 54              |
+| I         | 42              |
+| J         | 78              |
+| K         | 28              |
+| L         | 15              |
+| M         | 89              |
+| N         |  0              |
+| O         | 95              |
+| P         | 44              |
+| Q         | 55              |
+| R         |  9              |
+| S         | 21              |
+| T         |  8              |
+| U         | 26              |
+| V         | 19              |
+| W         | 61              |
+| X         | 88              |
+| Y         | 99              |
+| Z         | 30              |
+
+Zum entschlüsseln, gehe von links nach rechts und nehme immer die längste mögliche Ziffer.

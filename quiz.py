@@ -1,7 +1,8 @@
-#!/usr/bin/python3
+#!/usr/local/bin/python3
 
 import sys
 import psutil
+import os
 from functools import reduce
 from pyfiglet import Figlet
 from time import sleep
@@ -10,7 +11,7 @@ from PIL import Image
 
 # Auxiliary methods
 
-base_path = '.'
+base_path = os.path.dirname(__file__)
 disable_animations = False
 
 
@@ -69,15 +70,9 @@ def show_image_timed(path, timeout=5):
             proc.terminate()
     img.close()
 
-# Program variables
-
-
-code = '123456'
-
-final_code_part = '78'
-
 
 # Quiz framework
+
 
 def info(info):
     def fn():
@@ -98,7 +93,7 @@ def sc_question(question, options, answer):
             typewrite(question + '\n')
         op_no = 1
         for option in options:
-            typewrite(str(op_no) + ': ' + option, speed=300)
+            typewrite('\t' + str(op_no) + ': ' + option, speed=300)
             op_no += 1
         typewrite()
         guess = 0
@@ -192,7 +187,7 @@ main_quiz = {
                 (
                     'text',
                     info(
-                        'Im folgenden wird dir je ein Bild für 2 Sekunden angezeigt. Du musst dann die Fragen beantworten.')
+                        'Im folgenden wird dir je ein Bild 2 Sekunden lang angezeigt. Du musst dann die Fragen beantworten.')
                 ),
                 (
                     'text',
@@ -318,7 +313,7 @@ main_quiz = {
                         [
                             'Christoph Blocher',
                             'Henry Dunant',
-                            'Friedrich Maria Remarque',
+                            'Erich Maria Remarque',
                             'George Williams',
                             'Angela Merkel'
                         ],
@@ -371,7 +366,7 @@ def passcode_prompt():
     typewrite('Um fortzufahren, tippe den Code ein.\n')
     while True:
         trial = input('Passwort: ')
-        if trial.strip() == code:
+        if trial.strip() == '854269':
             typewrite('\n')
             print_figlet('!!! Passwort korrekt !!!',
                          font='banner', alignment='center')
@@ -384,6 +379,7 @@ def quiz():
     typewrite('Um die restichen Ziffern zu erhalten, musst du das folgende Quiz bestehen. '
               + 'Du hast einen Versuch, wenn du es nicht schaffst löscht sich diese Datei von selbst. '
               + 'Du musst dazu mindestens 84.61538461538461%% aller Fragen richtig beantworten.\n\n')
+    pause(4)
     return run_quiz(main_quiz)
 
 
@@ -396,15 +392,20 @@ def outro(percentage):
     else:
         print_figlet('Nicht bestanden', font='digital')
         typewrite(
-            '\nAch was solls, ich wollte dir eh nur Zeit verlieren lassen...')
+            '\nWow, ich bin ein wenig enttäuscht... Bist du wirklich ein Cevianer?')
+        pause(0.5)
+        typewrite(
+            'Ach was solls, ich wollte dich eh nur Zeit verlieren lassen... ;)')
         typewrite(
             'Der code war noch nicht vollständig... Ich gebe dir jetzt trotzdem noch den letzten Teil.')
     typewrite('Der letzte Teil des Codes lautet...')
     pause(1)
-    print_figlet(str(final_code_part), font='big', alignment='center')
+    print_figlet('420', font='big', alignment='center')
     typewrite('\nMerke ihn dir gut!\n')
     pause(1)
-    typewrite('Folge nun dem Ladekabel so weit wie möglich...\n')
+    typewrite('==============================================')
+    typewrite('\n\nFolge nun dem Ladekabel so weit wie möglich...\n\n')
+    typewrite('==============================================')
     pause(2)
     print_figlet('Viel Spass', font='lean')
 
